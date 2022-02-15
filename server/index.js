@@ -1,7 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { pgUser, pgHost, pgDatabase, pgPassword, pgPort } = require('./keys');
+const {
+  pgUser,
+  pgHost,
+  pgDatabase,
+  pgPassword,
+  pgPort,
+  redisHost,
+  redisPort,
+} = require('./keys');
 
 const app = express();
 app.use(cors());
@@ -25,7 +33,7 @@ pgClient.on('connect', (client) => {
 
 // setup redis
 const redis = require('redis');
-const redisClient = redis.redisClient({
+const redisClient = redis.createClient({
   host: redisHost,
   port: redisPort,
   retry_strategy: () => 1000,
