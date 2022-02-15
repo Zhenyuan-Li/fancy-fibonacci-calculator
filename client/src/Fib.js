@@ -1,60 +1,32 @@
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
-
-const fibReducer = (state, action) => {
-  switch (action.type) {
-    case 'SEEN_INDEXES':
-      return {
-        seenIndex: action.payload,
-        values: state.values,
-        index: state.index,
-      };
-    case 'VALUES':
-      return {
-        seenIndex: state.seenIndex,
-        values: action.payload,
-        index: state.index,
-      };
-    case 'INDEX':
-      return {
-        seenIndex: state.seenIndex,
-        values: state.values,
-        index: action.payload,
-      };
-    default:
-      return { seenIndex: [], values: {}, index: '' };
-  }
-};
 
 const Fib = () => {
   const indexRef = useRef();
-  const [fibState, dispatchFib] = useReducer(fibReducer, {
-    seenIndex: [],
-    values: {},
-    index: '',
-  });
+  const [seenIndexes, setSeenIndexes] = useState([]);
+  const [values, setValues] = useState({});
 
-  const fetchValues = async () => {
+  const fetchValues = useCallback(async () => {
     const values = await axios.get('/api/values/current');
-    dispatchFib({ type: 'VALUES', payload: values.data });
-  };
+    setValues(values.data);
+  }, []);
 
-  const fetchIndexes = async () => {
+  const fetchIndexes = useCallback(async () => {
     const seenIndexes = await axios.get('/api/values/all');
-    dispatchFib({ type: 'SEEN_INDEXES', payload: seenIndexes.data });
-  };
+    setSeenIndexes(seenIndexes.data);
+  }, []);
 
   useEffect(() => {
     fetchValues();
     fetchIndexes();
-  }, []);
+  }, [fetchValues, fetchIndexes]);
 
-  const { seenIndex, values, index } = fibState;
+  useEffect(() => {}, [values, seenIndexes]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    await axios.get('/api/values', {
+    await axios.post('/api/values', {
       index: indexRef.current.value,
     });
   };
@@ -63,11 +35,15 @@ const Fib = () => {
     const entries = [];
 
     for (let key in values) {
-      entries.push(
-        <div key={key}>
-          For index {key} I calculated {values[key]}
-        </div>
-      );
+      if (values[key] === 'Nothing yet!') {
+        continue;
+      } else {
+        entries.push(
+          <div key={key}>
+            For index {key} I calculated {values[key]}
+          </div>
+        );
+      }
     }
     return entries;
   };
@@ -76,13 +52,13 @@ const Fib = () => {
     <div>
       <form onSubmit={submitHandler}>
         <label>Enter your index:</label>
-        <input ref={indexRef} value={index} />
+        <input ref={indexRef} />
         <button>Submit</button>
       </form>
       <h3>Index I seen:</h3>
-      {seenIndex.map(({ number }) => number).join(', ')}
+      {seenIndexes.map(({ number }) => number).join(', ')}
       <h3>Calculated Values:</h3>
-      {renderValues}
+      {renderValues()}
     </div>
   );
 };

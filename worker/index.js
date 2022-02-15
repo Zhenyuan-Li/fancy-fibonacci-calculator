@@ -10,7 +10,7 @@ const sub = redisClient.duplicate();
 
 const fib = (i) => {
   if (i < 2) return 1;
-  return fib(index - 1) + fib(index - 2);
+  return fib(i - 1) + fib(i - 2);
 };
 
 sub.on('message', (channel, message) => {
