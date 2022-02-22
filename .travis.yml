@@ -3,19 +3,19 @@ language: generic
 services:
   - docker
 before_install:
-  - docker build -t zhenyuan-li/react-test -f ./client/Dockerfile.dev ./client
+  - docker build -t zhenyuan0li/ffc-test -f ./client/Dockerfile.dev ./client
   # Other tests can be also build here
 script:
-  - docker run -e CI=true zhenyuan-li/react-test npm test
+  - docker run -e CI=true zhenyuan0li/ffc-test npm test
 after-success:
-  - docker build -t zhenyuan-li/ffc-client ./client
-  - docker build -t zhenyuan-li/ffc-nginx ./nginx
-  - docker build -t zhenyuan-li/ffc-server ./server
-  - docker build -t zhenyuan-li/ffc-worker ./worker
+  - docker build -t zhenyuan0li/ffc-client ./client
+  - docker build -t zhenyuan0li/ffc-nginx ./nginx
+  - docker build -t zhenyuan0li/ffc-server ./server
+  - docker build -t zhenyuan0li/ffc-worker ./worker
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them to docker hub
-  - docker push zhenyuan-li/ffc-client
-  - docker push zhenyuan-li/ffc-nginx
-  - docker push zhenyuan-li/ffc-server
-  - docker push zhenyuan-li/ffc-worker
+  - docker push zhenyuan0li/ffc-client
+  - docker push zhenyuan0li/ffc-nginx
+  - docker push zhenyuan0li/ffc-server
+  - docker push zhenyuan0li/ffc-worker
