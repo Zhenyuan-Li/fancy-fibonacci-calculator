@@ -19,3 +19,14 @@ after-success:
   - docker push zhenyuan0li/ffc-nginx
   - docker push zhenyuan0li/ffc-server
   - docker push zhenyuan0li/ffc-worker
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-2
+  app: ffc
+  env: Ffc-env
+  bucket_name: elasticbeanstalk-us-east-2-218664566765
+  bucket_path: docker-ffc
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY

@@ -8,8 +8,8 @@ A great course for developers (especially js full-stack developer) to understand
 ### UI & Application Architecture
 
 ![User Interface](/images/interface.png)
-![Application Architecture](/images/architecture.png)
+![Development env Architecture](/images/development.png) ![Production env Architecture](/images/production.png)
 
-## Part II Uding Kubernetes
+## Part II Using Kubernetes
 
 T.B.C
